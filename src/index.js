@@ -1,26 +1,28 @@
-function myFlat(arr) {
+function MyFlat(arr) {
   this.arr = arr;
 }
 
-myFlat.prototype.flats = function (iteretionCount = 1) {
-  let result = this.arr;
-  for (let i = 0; i < iteretionCount; i++) {
-    let tempArrey = [];
+MyFlat.prototype.flats = function (depth = 1) {
+  function flatten(arr, depth) {
+    let result = [];
 
-    result.forEach((element) => {
-      if (Array.isArray(element)) {
-        tempArrey = tempArrey.concat(element);
+    for (let i = 0; i < arr.length; i++) {
+      if (i in arr === false) continue;
+
+      if (Array.isArray(arr[i]) && depth > 0) {
+        result.push(...flatten(arr[i], depth - 1));
       } else {
-        tempArrey.push(element);
+        result.push(arr[i]);
       }
-    });
-    result = tempArrey;
+    }
+
+    return result;
   }
-  return (result = result.filter(
-    (element) => element != "" && element != " " && element != "    ",
-  ));
+
+  return flatten(this.arr, depth);
 };
 
-const myArrey = [1, 2, "    ", 3, [4, 5, [1, 4]]];
-const a = new myFlat(myArrey);
-console.log(a.flats(2));
+const myArray = [1, 2, "    ", 3, [4, 5, [1, 4]]];
+const a = new MyFlat(myArray);
+
+console.log(a.flats(Infinity));
